@@ -1,19 +1,19 @@
 package ch.laengu.entity;
 
-public class TextMessage {
+public class Message {
     private Long id;
     private String text;
     private boolean isValid;
 
-    public TextMessage() {}
+    public Message() {}
 
-    public TextMessage(Long id, String text) {
+    public Message(Long id, String text) {
         this.id = id;
         this.text = text;
         this.isValid = false;
     }
 
-    public TextMessage(Long id, String text, boolean isValid) {
+    public Message(Long id, String text, boolean isValid) {
         this.id = id;
         this.text = text;
         this.isValid = isValid;
@@ -45,6 +45,6 @@ public class TextMessage {
 
     @Override
     public String toString() {
-        return "TextMessage [id=" + id + ", text=" + text + ", isValid=" + isValid + "]";
+        return "Message [id=" + id + ", text=" + text + ", isValid=" + isValid + "]";
     }
 }
