@@ -29,4 +29,18 @@ public class Messaging {
         Log.info("Sending to topic validated-blog: " + message.toString());
         return message;
     }
+
+    @Incoming("new-comment")
+    @Outgoing("validated-comment")
+    public Message validateComment(Message message) {
+        Log.info("Received on topic new-comment: " + message.toString());
+        String text = message.getText();
+        if (invalidCommentContent.contains(text)) {
+            message.setValid(false);
+        } else {
+            message.setValid(true);
+        }
+        Log.info("Sending to topic validated-comment: " + message.toString());
+        return message;
+    }
 }
