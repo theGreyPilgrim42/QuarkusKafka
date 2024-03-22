@@ -7,7 +7,7 @@ import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.eclipse.microprofile.reactive.messaging.Outgoing;
 
 import ch.laengu.entity.Message;
-import io.quarkus.logging.Log;
+import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
@@ -18,29 +18,33 @@ public class Messaging {
 
     @Incoming("new-blog")
     @Outgoing("validated-blog")
-    public Message validateBlog(Message message) {
-        Log.info("Received on topic new-blog: " + message.toString());
-        String text = message.getText();
-        if (invalidBlogContent.contains(text)) {
-            message.setValid(false);
-        } else {
-            message.setValid(true);
-        }
-        Log.info("Sending to topic validated-blog: " + message.toString());
-        return message;
+    public Uni<Message> validateBlog(Message message) {
+        return Uni.createFrom().item(message).map(msg -> {
+            String text = msg.getText();
+            for (String invalidString : invalidBlogContent) {
+                if (text.contains(invalidString)) {
+                    msg.setValid(false);
+                    return msg;
+                } 
+            }
+            msg.setValid(true);
+            return msg;
+        });
     }
 
     @Incoming("new-comment")
     @Outgoing("validated-comment")
-    public Message validateComment(Message message) {
-        Log.info("Received on topic new-comment: " + message.toString());
-        String text = message.getText();
-        if (invalidCommentContent.contains(text)) {
-            message.setValid(false);
-        } else {
-            message.setValid(true);
-        }
-        Log.info("Sending to topic validated-comment: " + message.toString());
-        return message;
+    public Uni<Message> validateComment(Message message) {
+        return Uni.createFrom().item(message).map(msg -> {
+            String text = msg.getText();
+            for (String invalidString : invalidCommentContent) {
+                if (text.contains(invalidString)) {
+                    msg.setValid(false);
+                    return msg;
+                } 
+            }
+            msg.setValid(true);
+            return msg;
+        });
     }
 }
